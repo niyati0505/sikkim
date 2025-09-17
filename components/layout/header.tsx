@@ -14,7 +14,7 @@ const navigation = [
   { name: "Tour", href: "/tour" },
   { name: "Explore", href: "/explore" },
   { name: "Events", href: "/events" },
-  { name: "Digital Archives", href: "/research" },
+  { name: "Digital Archives", href: "/archives" },
   { name: "About", href: "/about" },
 ]
 

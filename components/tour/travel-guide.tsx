@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Plane, Train, Car, Info, AlertTriangle, Wallet } from "lucide-react"
+import { Plane, Train, Car, Info, AlertTriangle } from "lucide-react"
 
 const travelInfo = {
   gettingThere: [
@@ -64,29 +63,6 @@ const travelInfo = {
       validity: "7-15 days",
       cost: "₹200-500",
       where: "Tourism office",
-    },
-  ],
-  budgetGuide: [
-    {
-      category: "Budget Travel",
-      accommodation: "₹500-1,500 per night",
-      food: "₹300-600 per day",
-      transport: "₹500-1,000 per day",
-      total: "₹1,300-3,100 per day",
-    },
-    {
-      category: "Mid-Range",
-      accommodation: "₹1,500-4,000 per night",
-      food: "₹600-1,200 per day",
-      transport: "₹1,000-2,500 per day",
-      total: "₹3,100-7,700 per day",
-    },
-    {
-      category: "Luxury",
-      accommodation: "₹4,000-15,000 per night",
-      food: "₹1,200-3,000 per day",
-      transport: "₹2,500-6,000 per day",
-      total: "₹7,700-24,000 per day",
     },
   ],
 }
@@ -177,47 +153,6 @@ export function TravelGuide() {
           </div>
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center">
-            <Wallet className="h-5 w-5 mr-2" />
-            Budget Planning
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {travelInfo.budgetGuide.map((budget, index) => (
-              <div key={index} className="p-4 border rounded-lg">
-                <h4 className="font-semibold text-foreground mb-3">{budget.category}</h4>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <span className="text-muted-foreground">Accommodation:</span>
-                    <div className="font-medium">{budget.accommodation}</div>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Food:</span>
-                    <div className="font-medium">{budget.food}</div>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Transport:</span>
-                    <div className="font-medium">{budget.transport}</div>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Total/Day:</span>
-                    <div className="font-bold text-primary">{budget.total}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Button className="w-full">
-        <Info className="h-4 w-4 mr-2" />
-        Download Complete Travel Guide
-      </Button>
     </div>
   )
 }

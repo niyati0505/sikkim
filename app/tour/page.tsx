@@ -1,16 +1,14 @@
-import { Header } from "@/components/layout/header"
-import { Footer } from "@/components/layout/footer"
 import { TourHeader } from "@/components/tour/tour-header"
 import { InteractiveMap } from "@/components/tour/interactive-map"
-import { TourRoutes } from "@/components/tour/tour-routes"
+
 import { TravelGuide } from "@/components/tour/travel-guide"
-import { NearbyAttractions } from "@/components/tour/nearby-attractions"
+
 import { Suspense } from "react"
 
 export default function TourPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      {/* ✅ Removed <Header /> */}
       <main className="flex-1">
         <TourHeader />
         <div className="max-w-7xl mx-auto px-6 py-8">
@@ -19,16 +17,16 @@ export default function TourPage() {
               <Suspense fallback={<div>Loading map...</div>}>
                 <InteractiveMap />
               </Suspense>
-              <TourRoutes />
+              
             </div>
             <div className="space-y-8">
               <TravelGuide />
-              <NearbyAttractions />
+              
             </div>
           </div>
         </div>
       </main>
-      <Footer />
+      {/* ✅ Removed <Footer /> */}
     </div>
   )
 }

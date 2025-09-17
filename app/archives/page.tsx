@@ -9,7 +9,6 @@ import { Suspense } from "react"
 export default function ArchivesPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
       <main className="flex-1">
         <ArchivesHeader />
         <FeaturedCollections />
