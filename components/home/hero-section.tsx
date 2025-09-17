@@ -16,24 +16,6 @@ export function HeroSection() {
           A Nature's Gift
         </p>
 
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-2xl md:text-3xl font-bold text-yellow-400 text-shadow-sm">200+</div>
-            <div className="text-sm opacity-80">Sacred Sites</div>
-          </div>
-          <div>
-            <div className="text-2xl md:text-3xl font-bold text-yellow-400 text-shadow-sm">50+</div>
-            <div className="text-sm opacity-80">360° Views</div>
-          </div>
-          <div>
-            <div className="text-2xl md:text-3xl font-bold text-yellow-400 text-shadow-sm">1000+</div>
-            <div className="text-sm opacity-80">Digital Archives</div>
-          </div>
-          <div>
-            <div className="text-2xl md:text-3xl font-bold text-yellow-400 text-shadow-sm">5</div>
-            <div className="text-sm opacity-80">Languages</div>
-          </div>
-        </div>
       </div>
     </section>
   )

@@ -38,7 +38,7 @@ export function CulturalHighlights() {
     <section className="py-16 px-6 bg-muted/30">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-foreground mb-4">Cultural Heritage Collection</h2>
+          <h2 className="text-3xl font-bold mb-4">Cultural Heritage Collection</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Preserving centuries of Buddhist wisdom and artistic traditions through digital innovation
           </p>
@@ -59,7 +59,7 @@ export function CulturalHighlights() {
                     </Badge>
                   </div>
 
-                  <h3 className="font-semibold text-foreground mb-2">{highlight.title}</h3>
+                  <h3 className="font-semibold mb-2">{highlight.title}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{highlight.description}</p>
 
                   <div className="text-2xl font-bold text-primary">{highlight.count}</div>

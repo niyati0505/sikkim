@@ -52,7 +52,7 @@ export function QuickLinks() {
     <section className="py-16 px-6 bg-muted/30">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-foreground mb-4">Explore Sacred Heritage</h2>
+          <h2 className="text-3xl font-bold mb-4">Explore Sacred Heritage</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Choose your path to discover the rich spiritual and cultural heritage of Sikkim's monasteries
           </p>
@@ -72,7 +72,7 @@ export function QuickLinks() {
                         <Icon className="h-6 w-6" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                        <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
                           {link.title}
                         </h3>
                         <p className="text-sm text-muted-foreground">{link.description}</p>
