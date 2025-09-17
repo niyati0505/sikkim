@@ -1,162 +1,162 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { MapPin, Star, Volume2, Camera, Book } from "lucide-react"
+"use client"
 
-const filterCategories = {
-  regions: [
-    { id: "east-sikkim", label: "East Sikkim", count: 45 },
-    { id: "west-sikkim", label: "West Sikkim", count: 38 },
-    { id: "north-sikkim", label: "North Sikkim", count: 22 },
-    { id: "south-sikkim", label: "South Sikkim", count: 15 },
-  ],
-  traditions: [
-    { id: "nyingma", label: "Nyingma", count: 65 },
-    { id: "kagyu", label: "Kagyu", count: 42 },
-    { id: "gelug", label: "Gelug", count: 28 },
-    { id: "sakya", label: "Sakya", count: 15 },
-  ],
-  features: [
-    { id: "audio-guide", label: "Audio Guide", icon: Volume2, count: 85 },
-    { id: "360-view", label: "360° View", icon: Camera, count: 52 },
-    { id: "archives", label: "Digital Archives", icon: Book, count: 73 },
-    { id: "festivals", label: "Regular Festivals", icon: Star, count: 34 },
-  ],
-  established: [
-    { id: "ancient", label: "Before 1600", count: 12 },
-    { id: "early", label: "1600-1800", count: 28 },
-    { id: "modern", label: "1800-1950", count: 45 },
-    { id: "recent", label: "After 1950", count: 35 },
-  ],
+import { useState } from "react"
+
+interface FilterSidebarProps {
+  onFilterChange: (filters: any) => void
 }
 
-export function FilterSidebar() {
+export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
+  const [filters, setFilters] = useState<any>({
+    region: [],
+    tradition: [],
+    features: [],
+    established: [],
+  })
+
+  const regions = [
+    { label: "East Sikkim", count: 45 },
+    { label: "West Sikkim", count: 38 },
+    { label: "North Sikkim", count: 22 },
+    { label: "South Sikkim", count: 15 },
+  ]
+
+  const traditions = [
+    { label: "Nyingma", count: 65 },
+    { label: "Kagyu", count: 42 },
+    { label: "Gelug", count: 28 },
+    { label: "Sakya", count: 15 },
+  ]
+
+  const features = [
+    { label: "Audio Guide", count: 85 },
+    { label: "360° View", count: 52 },
+    { label: "Digital Archives", count: 73 },
+    { label: "Regular Festivals", count: 34 },
+  ]
+
+  const established = [
+    { label: "Before 1600", count: 12 },
+    { label: "1600-1800", count: 28 },
+    { label: "1800-1950", count: 45 },
+    { label: "After 1950", count: 35 },
+  ]
+
+  const handleCheckboxChange = (category: string, value: string) => {
+    setFilters((prev: any) => {
+      const updated = prev[category].includes(value)
+        ? prev[category].filter((v: string) => v !== value)
+        : [...prev[category], value]
+      return { ...prev, [category]: updated }
+    })
+  }
+
+  const applyFilters = () => {
+    onFilterChange(filters)
+  }
+
+  const clearFilters = () => {
+    setFilters({ region: [], tradition: [], features: [], established: [] })
+    onFilterChange({})
+  }
+
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center">
-            <MapPin className="h-5 w-5 mr-2" />
-            Filters
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Regions */}
-          <div>
-            <h3 className="font-medium text-foreground mb-3">Region</h3>
-            <div className="space-y-2">
-              {filterCategories.regions.map((region) => (
-                <div key={region.id} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id={region.id} />
-                    <label
-                      htmlFor={region.id}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {region.label}
-                    </label>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {region.count}
-                  </Badge>
-                </div>
-              ))}
+    <aside className="bg-yellow-50 p-4 rounded-lg space-y-6">
+      <h2 className="text-lg font-semibold flex items-center gap-2">
+        <span>📍</span> Filters
+      </h2>
+
+      {/* Region */}
+      <div>
+        <h3 className="font-medium mb-2">Region</h3>
+        {regions.map((r) => (
+          <label key={r.label} className="flex justify-between mb-2">
+            <div>
+              <input
+                type="checkbox"
+                checked={filters.region.includes(r.label)}
+                onChange={() => handleCheckboxChange("region", r.label)}
+                className="mr-2"
+              />
+              {r.label}
             </div>
-          </div>
+            <span className="text-gray-500">{r.count}</span>
+          </label>
+        ))}
+      </div>
 
-          <Separator />
-
-          {/* Buddhist Traditions */}
-          <div>
-            <h3 className="font-medium text-foreground mb-3">Buddhist Tradition</h3>
-            <div className="space-y-2">
-              {filterCategories.traditions.map((tradition) => (
-                <div key={tradition.id} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id={tradition.id} />
-                    <label
-                      htmlFor={tradition.id}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {tradition.label}
-                    </label>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {tradition.count}
-                  </Badge>
-                </div>
-              ))}
+      {/* Tradition */}
+      <div>
+        <h3 className="font-medium mb-2">Buddhist Tradition</h3>
+        {traditions.map((t) => (
+          <label key={t.label} className="flex justify-between mb-2">
+            <div>
+              <input
+                type="checkbox"
+                checked={filters.tradition.includes(t.label)}
+                onChange={() => handleCheckboxChange("tradition", t.label)}
+                className="mr-2"
+              />
+              {t.label}
             </div>
-          </div>
+            <span className="text-gray-500">{t.count}</span>
+          </label>
+        ))}
+      </div>
 
-          <Separator />
-
-          {/* Features */}
-          <div>
-            <h3 className="font-medium text-foreground mb-3">Available Features</h3>
-            <div className="space-y-2">
-              {filterCategories.features.map((feature) => {
-                const Icon = feature.icon
-                return (
-                  <div key={feature.id} className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id={feature.id} />
-                      <label
-                        htmlFor={feature.id}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center"
-                      >
-                        <Icon className="h-3 w-3 mr-1" />
-                        {feature.label}
-                      </label>
-                    </div>
-                    <Badge variant="outline" className="text-xs">
-                      {feature.count}
-                    </Badge>
-                  </div>
-                )
-              })}
+      {/* Features */}
+      <div>
+        <h3 className="font-medium mb-2">Available Features</h3>
+        {features.map((f) => (
+          <label key={f.label} className="flex justify-between mb-2">
+            <div>
+              <input
+                type="checkbox"
+                checked={filters.features.includes(f.label)}
+                onChange={() => handleCheckboxChange("features", f.label)}
+                className="mr-2"
+              />
+              {f.label}
             </div>
-          </div>
+            <span className="text-gray-500">{f.count}</span>
+          </label>
+        ))}
+      </div>
 
-          <Separator />
-
-          {/* Established Period */}
-          <div>
-            <h3 className="font-medium text-foreground mb-3">Established</h3>
-            <div className="space-y-2">
-              {filterCategories.established.map((period) => (
-                <div key={period.id} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id={period.id} />
-                    <label
-                      htmlFor={period.id}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {period.label}
-                    </label>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {period.count}
-                  </Badge>
-                </div>
-              ))}
+      {/* Established */}
+      <div>
+        <h3 className="font-medium mb-2">Established</h3>
+        {established.map((e) => (
+          <label key={e.label} className="flex justify-between mb-2">
+            <div>
+              <input
+                type="checkbox"
+                checked={filters.established.includes(e.label)}
+                onChange={() => handleCheckboxChange("established", e.label)}
+                className="mr-2"
+              />
+              {e.label}
             </div>
-          </div>
+            <span className="text-gray-500">{e.count}</span>
+          </label>
+        ))}
+      </div>
 
-          <Separator />
-
-          <div className="flex space-x-2">
-            <Button size="sm" className="flex-1">
-              Apply Filters
-            </Button>
-            <Button size="sm" variant="outline">
-              Clear All
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      {/* Buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={applyFilters}
+          className="flex-1 bg-yellow-600 text-white py-2 rounded hover:bg-yellow-700"
+        >
+          Apply Filters
+        </button>
+        <button
+          onClick={clearFilters}
+          className="flex-1 border border-gray-300 py-2 rounded hover:bg-gray-100"
+        >
+          Clear All
+        </button>
+      </div>
+    </aside>
   )
 }
