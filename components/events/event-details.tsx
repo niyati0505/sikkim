@@ -1,314 +1,166 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, MapPin, Clock, Users, Bell, Share2, Download, Navigation, Camera } from "lucide-react"
+"use client"
 
-interface EventDetailsProps {
-  eventId: string
+import { useEffect, useState } from "react"
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+
+interface Event {
+  id: number
+  monastery_id: number
+  event_name: string
+  monastery_name: string
+  description: string
+  start_date: string
+  end_date: string
+  category: string
+  main_image_path: string
+  registration_required: boolean
+  max_participants: string
+  when_does_it_happen: string
 }
 
-// Mock data - in real app this would come from API/database
-const eventData = {
-  id: 1,
-  title: "Losar Festival - Tibetan New Year",
-  date: "2024-02-10",
-  time: "06:00 AM",
-  endTime: "08:00 PM",
-  location: "Rumtek Monastery",
-  address: "Rumtek, East Sikkim, India",
-  description:
-    "The most important festival in the Tibetan calendar, celebrating the new year with traditional masked dances, prayers, and community feasts.",
-  longDescription:
-    "Losar, meaning 'new year' in Tibetan, is the most significant festival in the Tibetan Buddhist calendar. This three-day celebration marks the beginning of the Tibetan lunar year and is observed with great enthusiasm across all monasteries in Sikkim. The festival combines spiritual practices with cultural traditions, featuring elaborate masked dances (Cham), traditional music, community feasts, and prayer ceremonies.",
-  image: "/losar-festival-masked-dancers-colorful-celebration.jpg",
-  images: [
-    "/losar-festival-masked-dancers-colorful-celebration.jpg",
-    "/placeholder.svg?key=losar2",
-    "/placeholder.svg?key=losar3",
-    "/placeholder.svg?key=losar4",
-  ],
-  type: "Festival",
-  duration: "3 days",
-  attendees: "2000+",
-  highlights: ["Cham Dance", "Traditional Music", "Community Feast", "Prayer Ceremonies"],
-  schedule: [
-    { time: "06:00 AM", activity: "Morning Prayers and Offerings" },
-    { time: "08:00 AM", activity: "Traditional Breakfast Ceremony" },
-    { time: "10:00 AM", activity: "Cham Dance Performances" },
-    { time: "12:00 PM", activity: "Community Lunch" },
-    { time: "02:00 PM", activity: "Cultural Programs" },
-    { time: "04:00 PM", activity: "Blessing Ceremonies" },
-    { time: "06:00 PM", activity: "Evening Prayers" },
-    { time: "07:00 PM", activity: "Traditional Dinner" },
-  ],
-  significance:
-    "Losar represents renewal, purification, and the triumph of good over evil. It's a time for families to come together, seek blessings for the coming year, and participate in ancient traditions that have been preserved for centuries.",
-  traditions: [
-    "Khapse preparation - traditional fried pastries",
-    "House cleaning and decoration with prayer flags",
-    "Offering of Tsampa (roasted barley flour)",
-    "Exchange of Tashi Delek greetings",
-    "Wearing of traditional Tibetan costumes",
-  ],
-  guidelines: [
-    "Arrive early to secure good viewing spots for performances",
-    "Dress respectfully and modestly",
-    "Photography may be restricted during certain ceremonies",
-    "Participate respectfully in community activities",
-    "Follow monastery guidelines and staff instructions",
-  ],
+interface EventDetailsProps {
+  eventId: string   // ✅ match the prop name properly
 }
 
 export function EventDetails({ eventId }: EventDetailsProps) {
+  const [event, setEvent] = useState<Event | null>(null)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      if (!eventId) {
+        setErrorMsg("No event ID provided.")
+        return
+      }
+
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("id", Number(eventId))  // ✅ cast to number
+        .single()
+
+      if (error) {
+        console.error("Error fetching event:", error.message)
+        setErrorMsg("Could not load event details. Please try again later.")
+      } else {
+        setEvent(data)
+      }
+    }
+
+    fetchEvent()
+  }, [eventId])
+
+  if (errorMsg) {
+    return <p className="text-red-500 p-6">{errorMsg}</p>
+  }
+
+  if (!event) {
+    return <p className="text-gray-500 p-6">Loading event details...</p>
+  }
+
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8">
-      {/* Hero Section */}
-      <div className="mb-8">
-        <div className="relative h-96 rounded-lg overflow-hidden mb-6">
-          <img
-            src={eventData.image || "/placeholder.svg"}
-            alt={eventData.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/30" />
-          <div className="absolute bottom-6 left-6 text-white">
-            <Badge className="bg-primary text-primary-foreground mb-2">{eventData.type}</Badge>
-            <h1 className="text-3xl font-bold mb-2">{eventData.title}</h1>
-            <div className="flex items-center space-x-4 text-sm">
-              <div className="flex items-center">
-                <Calendar className="h-4 w-4 mr-1" />
-                {new Date(eventData.date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </div>
-              <div className="flex items-center">
-                <Clock className="h-4 w-4 mr-1" />
-                {eventData.time} - {eventData.endTime}
-              </div>
-              <div className="flex items-center">
-                <MapPin className="h-4 w-4 mr-1" />
-                {eventData.location}
-              </div>
-            </div>
-          </div>
-          <div className="absolute top-6 right-6 flex space-x-2">
-            <Button size="sm" variant="ghost" className="bg-white/90 hover:bg-white">
-              <Share2 className="h-4 w-4" />
-            </Button>
-            <Button size="sm" variant="ghost" className="bg-white/90 hover:bg-white">
-              <Download className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          <Button size="lg" className="bg-primary hover:bg-primary/90">
-            <Bell className="mr-2 h-5 w-5" />
-            Get Notifications
-          </Button>
-          <Button size="lg" variant="outline">
-            <Calendar className="mr-2 h-5 w-5" />
-            Add to Calendar
-          </Button>
-          <Button size="lg" variant="outline">
-            <Navigation className="mr-2 h-5 w-5" />
-            Get Directions
-          </Button>
-          <Button size="lg" variant="outline">
-            <Camera className="mr-2 h-5 w-5" />
-            View Gallery
-          </Button>
-        </div>
-
-        {/* Event Highlights */}
-        <div className="flex flex-wrap gap-2">
-          {eventData.highlights.map((highlight) => (
-            <Badge key={highlight} variant="outline">
-              {highlight}
-            </Badge>
-          ))}
+    <div className="space-y-8">
+      {/* Banner */}
+      <div className="relative h-80 w-full rounded-lg overflow-hidden shadow">
+        <img
+          src={event.main_image_path}
+          alt={event.event_name}
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-6">
+          <h1 className="text-4xl font-bold text-white">{event.event_name}</h1>
+          <p className="text-gray-200">{event.monastery_name}</p>
         </div>
       </div>
 
-      {/* Content Tabs */}
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="schedule">Schedule</TabsTrigger>
-          <TabsTrigger value="traditions">Traditions</TabsTrigger>
-          <TabsTrigger value="guidelines">Guidelines</TabsTrigger>
-          <TabsTrigger value="gallery">Gallery</TabsTrigger>
-        </TabsList>
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-3">
+        <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
+          Get Notification
+        </button>
+        <button className="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200">
+          Add to Calendar
+        </button>
+        <button className="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200">
+          Get Directions
+        </button>
+        <button className="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200">
+          View Gallery
+        </button>
+      </div>
 
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-4">About {eventData.title}</h3>
-                  <p className="text-muted-foreground mb-4">{eventData.longDescription}</p>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="font-medium">Duration:</span>
-                      <p className="text-muted-foreground">{eventData.duration}</p>
-                    </div>
-                    <div>
-                      <span className="font-medium">Expected Attendees:</span>
-                      <p className="text-muted-foreground">{eventData.attendees}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+      {/* Tabs */}
+      <div className="border-b border-gray-200">
+        <nav className="flex gap-6 text-sm font-medium text-gray-600">
+          <a className="pb-2 border-b-2 border-orange-600 text-orange-600">
+            Overview
+          </a>
+          <a className="pb-2 hover:text-orange-600">Schedule</a>
+          <a className="pb-2 hover:text-orange-600">Traditions</a>
+          <a className="pb-2 hover:text-orange-600">Guidelines</a>
+          <a className="pb-2 hover:text-orange-600">Gallery</a>
+        </nav>
+      </div>
 
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-4">Cultural Significance</h3>
-                  <p className="text-muted-foreground">{eventData.significance}</p>
-                </CardContent>
-              </Card>
-            </div>
+      {/* Content */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Left */}
+        <div className="md:col-span-2 space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-lg font-semibold mb-3">
+              About {event.event_name}
+            </h2>
+            <p className="text-gray-700">{event.description}</p>
+          </div>
 
-            <div className="space-y-6">
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Event Details</h3>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-3 text-muted-foreground" />
-                      <div>
-                        <div className="font-medium">Date</div>
-                        <div className="text-muted-foreground">
-                          {new Date(eventData.date).toLocaleDateString("en-US", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-3 text-muted-foreground" />
-                      <div>
-                        <div className="font-medium">Time</div>
-                        <div className="text-muted-foreground">
-                          {eventData.time} - {eventData.endTime}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-3 text-muted-foreground" />
-                      <div>
-                        <div className="font-medium">Location</div>
-                        <div className="text-muted-foreground">{eventData.location}</div>
-                        <div className="text-xs text-muted-foreground">{eventData.address}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="h-4 w-4 mr-3 text-muted-foreground" />
-                      <div>
-                        <div className="font-medium">Expected Attendance</div>
-                        <div className="text-muted-foreground">{eventData.attendees}</div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-lg font-semibold mb-3">Cultural Significance</h2>
+            <p className="text-gray-700">
+              {event.event_name} represents peace, spirituality, and unity...
+            </p>
+          </div>
+        </div>
 
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-                  <div className="space-y-2">
-                    <Button size="sm" className="w-full">
-                      <Bell className="h-4 w-4 mr-2" />
-                      Set Reminder
-                    </Button>
-                    <Button size="sm" variant="outline" className="w-full bg-transparent">
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share Event
-                    </Button>
-                    <Button size="sm" variant="outline" className="w-full bg-transparent">
-                      <Download className="h-4 w-4 mr-2" />
-                      Download Info
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+        {/* Right */}
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-lg font-semibold mb-3">Event Details</h2>
+            <ul className="text-sm text-gray-700 space-y-2">
+              <li>📅 Start: {event.start_date}</li>
+              <li>📅 End: {event.end_date}</li>
+              <li>📍 Location: {event.monastery_name}</li>
+              <li>🏷️ Category: {event.category}</li>
+              {event.max_participants && (
+                <li>👥 Max Participants: {event.max_participants}</li>
+              )}
+              {event.registration_required && <li>📝 Registration Required</li>}
+              {event.when_does_it_happen && (
+                <li>🕒 Happens: {event.when_does_it_happen}</li>
+              )}
+            </ul>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
+            <div className="flex flex-col gap-2">
+              <button className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">
+                Join Event
+              </button>
+              <button className="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200">
+                Share Event
+              </button>
+              <button className="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200">
+                Download Info
+              </button>
             </div>
           </div>
-        </TabsContent>
-
-        <TabsContent value="schedule">
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-6">Event Schedule</h3>
-              <div className="space-y-4">
-                {eventData.schedule.map((item, index) => (
-                  <div key={index} className="flex items-start space-x-4 p-4 bg-muted/30 rounded-lg">
-                    <div className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium min-w-fit">
-                      {item.time}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-foreground">{item.activity}</h4>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="traditions">
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-6">Traditional Practices</h3>
-              <div className="space-y-4">
-                {eventData.traditions.map((tradition, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                    <p className="text-muted-foreground">{tradition}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="guidelines">
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-6">Visitor Guidelines</h3>
-              <div className="space-y-4">
-                {eventData.guidelines.map((guideline, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0" />
-                    <p className="text-muted-foreground">{guideline}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="gallery">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {eventData.images.map((image, index) => (
-              <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
-                <img
-                  src={image || "/placeholder.svg"}
-                  alt={`${eventData.title} - Image ${index + 1}`}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+        </div>
+      </div>
     </div>
   )
 }
