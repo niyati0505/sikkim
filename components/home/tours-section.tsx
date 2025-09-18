@@ -27,7 +27,7 @@ const travelInfo = [
 
 export default function ToursSection() {
   return (
-    <section className="py-16 px-6 bg-white">
+    <section className="py-16 px-6 bg-white dark:bg-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Travel Information</h2>
@@ -42,7 +42,7 @@ export default function ToursSection() {
             const Icon = info.icon;
             return (
               <Link key={info.id} href="/tour" className="flex-1">
-                <Card className="cursor-pointer h-full rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform bg-yellow-50">
+                <Card className="cursor-pointer h-full rounded-2xl shadow-md hover:shadow-xl hover:scale-105 transition-transform bg-yellow-50 ">
                   <CardContent className="p-6 text-center space-y-4">
                     {/* Icon */}
                     <div className="flex justify-center">

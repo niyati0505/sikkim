@@ -299,10 +299,7 @@ export function InteractiveMap() {
                           </div>
                         </div>
                         <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <Navigation className="h-4 w-4 mr-2" />
-                            Directions
-                          </Button>
+                          
                           <Button
                             size="sm"
                             onClick={() => window.location.href = `/tour/${monastery.id}`}

@@ -4,8 +4,9 @@ import { Inter, Poppins } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import Script from "next/script"
+import { ThemeProvider } from "next-themes"
 
-import {Header} from "@/components/layout/header" // ✅ global header
+import { Header } from "@/components/layout/header"
 import "./globals.css"
 
 const inter = Inter({
@@ -29,33 +30,47 @@ export const metadata: Metadata = {
   keywords: ["Sikkim", "monasteries", "Buddhism", "heritage", "tourism", "culture"],
 }
 
+// ✅ Wraps app with ThemeProvider
+function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      {children}
+    </ThemeProvider>
+  )
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable} antialiased`}>
-      <body className="font-sans bg-gray-50 text-gray-900">
-        {/* ✅ Header only once here */}
-        <Header />
+    <html
+      lang="en"
+      className={`${inter.variable} ${poppins.variable} antialiased`}
+      suppressHydrationWarning
+    >
+      {/* Notice: no fixed bg here, theme will decide */}
+      <body className="font-sans bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-500 transition-colors duration-300">
+        <Providers>
+          <Header />
 
-        <main className="min-h-screen">
-          <Suspense fallback={null}>{children}</Suspense>
-        </main>
+          <main className="min-h-screen">
+            <Suspense fallback={null}>{children}</Suspense>
+          </main>
 
-        <Analytics />
-        <Script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js" strategy="afterInteractive" defer />
-        <Script
-          src="https://files.bpcontent.cloud/2025/09/10/18/20250910181037-O27Q0BQ5.js"
-          strategy="afterInteractive"
-          defer
-        />
+          <Analytics />
+          <Script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js" strategy="afterInteractive" defer />
+          <Script
+            src="https://files.bpcontent.cloud/2025/09/10/18/20250910181037-O27Q0BQ5.js"
+            strategy="afterInteractive"
+            defer
+          />
+        </Providers>
       </body>
     </html>
   )
 }
-
 
 // import type React from "react"
 // import type { Metadata } from "next"

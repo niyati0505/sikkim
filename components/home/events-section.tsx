@@ -49,7 +49,7 @@ export default function EventsSection() {
   const visibleEvents = events.slice(currentIndex, currentIndex + 3);
 
   return (
-    <section className="py-16 px-6 bg-muted/20">
+    <section className="py-16 px-6 bg-muted/20 bg-white dark:bg-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Upcoming Events</h2>

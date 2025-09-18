@@ -10,7 +10,7 @@ const archives = [
 
 export default function DigitalArchives() {
   return (
-    <section className="py-16 px-6 bg-white">
+    <section className="py-16 px-6 bg-white dark:bg-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Digital Archives</h2>
