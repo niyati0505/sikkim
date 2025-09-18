@@ -50,6 +50,9 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable} antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+      </head>
       {/* Notice: no fixed bg here, theme will decide */}
       <body className="font-sans bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-500 transition-colors duration-300">
         <Providers>

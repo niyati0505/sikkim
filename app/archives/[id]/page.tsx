@@ -1,17 +1,44 @@
-import { Header } from "@/components/layout/header"
-import { Footer } from "@/components/layout/footer"
-import { ArchiveDetails } from "@/components/archives/archive-details"
-import { RelatedArchives } from "@/components/archives/related-archives"
+import { Footer } from "@/components/layout/footer";
+import ArchiveDetails from "@/components/archives/archive-details";
+import { notFound } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
-export default function ArchiveDetailPage({ params }: { params: { id: string } }) {
+interface ArchivePageProps {
+  params: {
+    id: string;
+  };
+}
+
+async function getArchive(id: string) {
+  const { data, error } = await supabase
+    .from("digital_archives")
+    .select("*")
+    .eq("id", Number(id))
+    .single();
+
+  if (error) {
+    console.error("Error fetching archive:", error);
+    return null;
+  }
+
+  return data;
+}
+
+export default async function ArchivePage({ params }: ArchivePageProps) {
+  const archive = await getArchive(params.id);
+
+  if (!archive) {
+    notFound();
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
       <main className="flex-1">
-        <ArchiveDetails archiveId={params.id} />
-        <RelatedArchives currentId={params.id} />
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <ArchiveDetails archive={archive} />
+        </div>
       </main>
       <Footer />
     </div>
-  )
+  );
 }
